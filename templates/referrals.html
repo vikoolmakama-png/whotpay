@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Refer & Earn | Whot Pay</title>
+<style>
+:root{color-scheme:dark;--red:#ff2949;--muted:#aaa;--line:#352027}
+*{box-sizing:border-box}
+body{margin:0;background:#080809;color:#f7f7f8;font-family:system-ui,-apple-system,Arial,sans-serif}
+.top{padding:17px 5%;border-bottom:1px solid #252025;background:#0d0d0f;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:23px;font-weight:900;letter-spacing:.5px}.brand span{color:var(--red)}
+.wrap{max-width:1100px;margin:28px auto;padding:0 16px 35px}
+.panel{background:linear-gradient(145deg,#171012,#0e0e10 65%);border:1px solid var(--line);border-radius:20px;padding:25px;margin-bottom:18px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+h1{font-size:clamp(27px,5vw,43px);margin:0 0 8px}
+.red{color:var(--red)}.muted{color:var(--muted);line-height:1.65}
+.pill{display:inline-block;border:1px solid #77303d;color:#ff8193;background:#271016;border-radius:30px;padding:8px 14px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:18px 0}
+.stat{background:#111113;border:1px solid #33252a;border-radius:15px;padding:19px}
+.stat .label{color:#bbb;font-size:14px}.stat .value{font-size:clamp(22px,3vw,30px);font-weight:850;margin:10px 0 4px;overflow-wrap:anywhere}
+.section-title{font-size:20px;font-weight:800;margin:0 0 8px}
+.fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:20px}
+label{display:block;color:#ccc;font-size:14px;margin:8px 0}
+input{width:100%;min-width:0;background:#080809;color:#fff;border:1px solid #493039;border-radius:12px;padding:15px;font-size:15px}
+.code{font-size:25px!important;font-weight:900;letter-spacing:2px;color:#ff4a63!important}
+button,.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(100deg,#f20d32,#c90025);color:white;font-weight:800;font-size:15px;text-decoration:none;cursor:pointer;margin-top:10px}
+button:active{transform:scale(.99)}
+.calc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:12px;margin-top:18px}
+.calcbox{padding:18px 10px;text-align:center;background:#101012;border:1px solid #35252b;border-radius:14px}
+.calcbox strong{display:block;font-size:24px;margin:9px 0}
+.green{color:#55e28b}.gold{color:#ffc45b}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+th,td{text-align:left;padding:14px 12px;border-bottom:1px solid #30252a}
+th{background:#171416;color:#ff9aaa}
+.empty{text-align:center;color:#aaa;padding:30px 12px}
+.info{border-color:#652535;background:linear-gradient(110deg,#1e0c11,#111113)}
+.back{color:#ff8394;text-decoration:none;display:inline-block;margin-top:6px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.fields{grid-template-columns:1fr}.panel{padding:19px}.calc{grid-template-columns:1fr;gap:8px}.calc .operator{display:none}.top{padding:15px 18px}.wrap{margin-top:18px}}
+@media(max-width:360px){.stats{grid-template-columns:1fr}.code{font-size:21px!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">♠ WHOT <span>PAY</span></div>
+  <a class="back" href="{{ url_for('dashboard') }}">← Dashboard</a>
+</header>
+<main class="wrap">
+  <section class="panel hero">
+    <div>
+      <h1>👥 Refer &amp; <span class="red">Earn</span></h1>
+      <p class="muted">Invite friends and earn <strong class="red">30%</strong> of every eligible deposit they make.</p>
+    </div>
+    <div class="pill">💸 30% COMMISSION</div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><div class="label">👥 Total Referrals</div><div class="value">{{ count }}</div><div class="muted">Registered users</div></div>
+    <div class="stat"><div class="label">💰 Total Earned</div><div class="value">₦{{ "{:,.2f}".format(total_earned|float) }}</div><div class="muted">Referral commissions</div></div>
+    <div class="stat"><div class="label">📈 This Month</div><div class="value">₦{{ "{:,.2f}".format(month_earned|float) }}</div><div class="muted">Approved earnings</div></div>
+    <div class="stat"><div class="label">🎯 Commission Rate</div><div class="value red">30%</div><div class="muted">Per approved deposit</div></div>
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">🔗 Your Referral Details</h2>
+    <p class="muted">Share your code or link with friends. Your referral code is personal to your account.</p>
+    <div class="fields">
+      <div>
+        <label for="refcode">Your referral code</label>
+        <input id="refcode" class="code" value="{{ code }}" readonly>
+        <button type="button" onclick="copyValue('refcode',this)">📋 Copy Referral Code</button>
+      </div>
+      <div>
+        <label for="reflink">Your referral link</label>
+        <input id="reflink" value="{{ link }}" readonly>
+        <button type="button" onclick="copyValue('reflink',this)">🔗 Copy Referral Link</button>
+        <button type="button" onclick="shareLink()">📤 Share with Friends</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">📜 Referral Earnings History</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Referred User</th><th>Deposit</th><th>Your 30%</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for item in earnings %}
+          <tr>
+            <td>{{ item.referred_username or 'Referred user' }}</td>
+            <td>{% if item.deposit_amount is not none %}₦{{ "{:,.2f}".format(item.deposit_amount|float) }}{% else %}—{% endif %}</td>
+            <td class="green">₦{{ "{:,.2f}".format(item.commission|float) }}</td>
+            <td>{{ item.created_at }}</td>
+            <td>{{ item.status }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="empty">🧾 <strong>No referral earnings yet</strong><br><span class="muted">Invite friends and earn 30% of their approved deposits.</span></td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel info">
+    <h2 class="section-title red">ⓘ How It Works</h2>
+    <p class="muted">1. Share your referral link.<br>2. Your friend registers using your code.<br>3. When their deposit is approved, you earn 30% of that deposit. The commission is added to your balance and recorded here.</p>
+  </section>
+</main>
+<script>
+async function copyValue(id,button){
+  const value=document.getElementById(id).value;
+  try{
+    await navigator.clipboard.writeText(value);
+  }catch(e){
+    const field=document.getElementById(id);
+    field.focus();field.select();
+    try{document.execCommand('copy')}catch(_){}
+  }
+  const old=button.textContent;
+  button.textContent='✓ Copied!';
+  setTimeout(()=>button.textContent=old,1600);
+}
+async function shareLink(){
+  const url=document.getElementById('reflink').value;
+  if(navigator.share){
+    try{await navigator.share({title:'Join Whot Pay',text:'Register with my referral link.',url})}catch(e){}
+  }else{
+    await copyValue('reflink',document.querySelectorAll('button')[2]);
+  }
+}
+</script>
+</body>
+</html>

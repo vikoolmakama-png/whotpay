@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create Account | WHOT PAY</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#080808;color:#fff;
+font-family:Arial,sans-serif;display:flex;align-items:center;
+justify-content:center;padding:20px}
+.box{width:100%;max-width:410px;padding:28px 23px;
+background:linear-gradient(145deg,#181012,#0d0d0d);
+border:1px solid #ff26383b;border-radius:18px;
+box-shadow:0 0 35px #ff263815}
+.logo{text-align:center;font-size:28px;font-weight:900;
+margin-bottom:10px;text-shadow:0 0 15px #ff26384c}
+.logo span{color:#ff3448}
+h2{text-align:center;font-size:23px;margin:20px 0 8px}
+.intro{text-align:center;color:#999;font-size:13px;margin-bottom:23px}
+label{display:block;font-size:12px;color:#ddd;margin:15px 0 8px}
+input{width:100%;padding:14px;background:#080808;color:white;
+border:1px solid #333;border-radius:9px;outline:none;font-size:14px}
+input:focus{border-color:#ff3448;box-shadow:0 0 12px #ff263820}
+button{width:100%;padding:15px;margin-top:24px;border:0;
+border-radius:9px;background:linear-gradient(135deg,#ff4353,#d90019);
+color:white;font-weight:bold;font-size:14px}
+a{color:#ff5263;text-decoration:none}
+.foot{text-align:center;font-size:13px;color:#aaa;margin-top:22px}
+.error{text-align:center;color:#ff7580;font-size:13px}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">WHOT<span> PAY</span></div>
+  <h2>Create Your Account</h2>
+  <div class="intro">Join the game in a few simple steps.</div>
+
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+  <form method="post">
+    <label for="fullname">Full Name</label>
+    <input id="fullname" name="fullname" autocomplete="name"
+           maxlength="100" required>
+
+    <label for="email">Email Address</label>
+    <input id="email" name="email" type="email"
+           autocomplete="email" maxlength="254" required>
+
+    <label for="username">Username</label>
+    <input id="username" name="username" autocomplete="username"
+           minlength="3" maxlength="30" required>
+
+    <label for="referral">Referral Code (optional)</label>
+    <input id="referral" name="referral" maxlength="30" value="{{ referral|default('') }}"
+           placeholder="Enter referral code">
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password"
+           autocomplete="new-password" minlength="8" required>
+
+    <button type="submit">CREATE ACCOUNT →</button>
+  </form>
+
+  <div class="foot">
+    Already registered? <a href="/login">Login</a><br><br>
+    <a href="/">← Back to home</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transaction History</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#080808;color:white;font-family:Arial}
+main{max-width:650px;margin:auto}
+.item{padding:18px;margin:13px 0;background:#151012;border:1px solid #422027;border-radius:12px}
+.amount{color:#ff4558;font-size:21px;font-weight:bold}
+small{color:#999}
+.status{float:right;color:#ffd36a;font-size:12px}
+a{color:#ff6676;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+<h2>📜 Transaction History</h2>
+<p><a href="/dashboard">← Dashboard</a></p>
+{% for t in transactions %}
+<div class="item">
+<span class="status">{{ t.status }}</span>
+<h3>{{ "💰" if t.kind == "Deposit" else "💸" }} {{ t.kind }}</h3>
+<div class="amount">₦{{ "{:,}".format(t.amount) }}</div>
+<p>{{ t.details }}</p>
+<small>{{ t.created_at }}</small>
+</div>
+{% else %}
+<p>No transactions yet.</p>
+{% endfor %}
+</main>
+</body>
+</html>

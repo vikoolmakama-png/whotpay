@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whot Pay Admin Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#090909;color:#f5f5f5;font-family:Arial,sans-serif}
+header{padding:20px;background:#160b0b;border-bottom:1px solid #8d2020;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header h1{font-size:22px;color:#ff4545;margin:0}
+a{color:#ff7777;text-decoration:none}.logout{background:#c91e2b;color:white;padding:10px 14px;border-radius:8px}
+main{max-width:1200px;margin:auto;padding:18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:25px}
+.card{background:#171313;border:1px solid #542626;border-radius:12px;padding:18px}
+.card small{color:#bbb}.card strong{display:block;font-size:25px;margin-top:10px;color:#ff5151;overflow-wrap:anywhere}
+section{margin:26px 0}.section-title{font-size:20px;color:#ff5151}
+.table-wrap{overflow-x:auto;border:1px solid #382626;border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:720px;background:#111}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #302323;font-size:13px;vertical-align:top}
+th{background:#211414;color:#ff8585}td{overflow-wrap:anywhere}.muted{color:#aaa}
+.badge{display:inline-block;padding:4px 8px;border-radius:6px;background:#302323}
+</style>
+</head>
+<body>
+<header><h1>🔴 WHOT PAY ADMIN</h1><a class="logout" href="/admin/logout">Logout</a></header>
+<main>
+<div class="cards">
+<div class="card"><small>👥 Total Registered Users</small><strong>{{ total_users }}</strong></div>
+<div class="card"><small>💰 Combined User Balances</small><strong>₦{{ "{:,}".format(total_balance) }}</strong></div>
+<div class="card"><small>📥 Deposit Requests</small><strong>{{ deposits|length }}</strong></div>
+<div class="card"><small>📤 Withdrawal Requests</small><strong>{{ withdrawals|length }}</strong></div>
+</div>
+
+<section>
+<h2 class="section-title">👥 Individual User Accounts</h2>
+<p class="muted">Each row shows one user's own balance. The combined balance above is only a summary.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>User ID</th><th>Username</th><th>Full Name</th><th>Email</th><th>Individual Balance</th></tr></thead>
+<tbody>
+{% for u in users %}
+<tr><td>{{ u.id }}</td><td>{{ u.username }}</td><td>{{ u.fullname or '—' }}</td><td>{{ u.email or '—' }}</td><td>₦{{ "{:,}".format(u.balance) }}</td></tr>
+{% else %}<tr><td colspan="5">No users registered yet.</td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+
+<section>
+<h2 class="section-title">📥 Deposit Requests</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Request ID</th><th>User</th><th>Amount</th><th>Status</th><th>Payment Details</th><th>Date</th></tr></thead>
+<tbody>
+{% for t in deposits %}
+<tr><td>{{ t.id }}</td><td>{{ t.username or ('User #' ~ t.user_id) }}</td><td>₦{{ "{:,}".format(t.amount) }}</td><td><span class="badge">{{ t.status }}</span></td><td>{{ t.details or '—' }}</td><td>{{ t.created_at }}</td></tr>
+{% else %}<tr><td colspan="6">No deposit requests found.</td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+
+<section>
+<h2 class="section-title">📤 Withdrawal Requests</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Request ID</th><th>User</th><th>Amount</th><th>Status</th><th>Bank / Account Details</th><th>Date</th></tr></thead>
+<tbody>
+{% for t in withdrawals %}
+<tr><td>{{ t.id }}</td><td>{{ t.username or ('User #' ~ t.user_id) }}</td><td>₦{{ "{:,}".format(t.amount) }}</td><td><span class="badge">{{ t.status }}</span></td><td>{{ t.details or '—' }}</td><td>{{ t.created_at }}</td></tr>
+{% else %}<tr><td colspan="6">No withdrawal requests found.</td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+
+<section>
+<h2 class="section-title">📜 All Transactions</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th><th>Details</th><th>Date</th></tr></thead>
+<tbody>
+{% for t in transactions %}
+<tr><td>{{ t.id }}</td><td>{{ t.username or ('User #' ~ t.user_id) }}</td><td>{{ t.kind }}</td><td>₦{{ "{:,}".format(t.amount) }}</td><td>{{ t.status }}</td><td>{{ t.details or '—' }}</td><td>{{ t.created_at }}</td></tr>
+{% else %}<tr><td colspan="7">No transactions recorded yet.</td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+</main></body></html>

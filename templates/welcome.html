@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WHOT PAY — Play. Compete. Win.</title>
+<style>
+:root {
+  --red: #ff2638;
+  --dark: #080808;
+  --muted: #a9a9b2;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--dark);
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  width: 320px;
+  height: 320px;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff001b;
+  filter: blur(150px);
+  opacity: .15;
+  pointer-events: none;
+  z-index: -1;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ffffff10;
+  background: #090909e8;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: white;
+  text-shadow: 0 0 12px #ff2638a0;
+}
+
+.logo span { color: var(--red); }
+
+.nav {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+a { text-decoration: none; }
+
+.login {
+  color: white;
+  font-size: 13px;
+  padding: 11px;
+}
+
+.join {
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 12px 15px;
+  border-radius: 9px;
+  background: linear-gradient(135deg,#ff4554,#d90019);
+  box-shadow: 0 0 20px #ff26383d;
+}
+
+.hero {
+  text-align: center;
+  padding: 70px 20px 35px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.badge {
+  display: inline-block;
+  padding: 9px 13px;
+  color: #ff6571;
+  background: #ff263812;
+  border: 1px solid #ff263844;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+h1 {
+  font-size: clamp(42px, 10vw, 68px);
+  line-height: 1.04;
+  letter-spacing: -2px;
+  margin: 27px 0 18px;
+  font-weight: 900;
+}
+
+h1 span {
+  display: block;
+  color: var(--red);
+  text-shadow: 0 0 12px #ff26383a, 0 0 35px #ff26382c;
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+  max-width: 470px;
+  margin: auto;
+}
+
+.ctas {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary, .secondary {
+  padding: 15px 23px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.primary {
+  background: linear-gradient(135deg,#ff4353,#d90019);
+  color: white;
+  box-shadow: 0 0 25px #ff263845;
+}
+
+.secondary {
+  color: white;
+  border: 1px solid #ffffff25;
+  background: #ffffff08;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 12px;
+  margin-top: 38px;
+}
+
+.stat {
+  padding: 20px 10px;
+  border: 1px solid #ffffff12;
+  border-radius: 15px;
+  background: linear-gradient(145deg,#171012,#0d0d0f);
+}
+
+.stat strong {
+  display: block;
+  color: #ff4656;
+  font-size: 23px;
+  margin-bottom: 8px;
+  text-shadow: 0 0 15px #ff26382b;
+}
+
+.stat small {
+  color: #aaa;
+  font-size: 11px;
+}
+
+section {
+  max-width: 700px;
+  margin: 15px auto 0;
+  padding: 30px 20px;
+}
+
+.section-label {
+  color: #ff5967;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-align: center;
+  font-weight: bold;
+}
+
+h2 {
+  text-align: center;
+  font-size: 27px;
+  margin: 12px 0;
+}
+
+.sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.requirements {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 13px;
+  margin-top: 25px;
+}
+
+.requirement {
+  padding: 21px 15px;
+  border-radius: 15px;
+  border: 1px solid #ff26382c;
+  background: linear-gradient(145deg,#1a1012,#101010);
+  box-shadow: inset 0 0 25px #ff263805;
+}
+
+.icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+  background: #ff263817;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  margin-bottom: 17px;
+}
+
+.requirement h3 {
+  font-size: 14px;
+  margin: 0 0 10px;
+}
+
+.amount {
+  font-size: 25px;
+  font-weight: 900;
+  color: #ff4656;
+  text-shadow: 0 0 16px #ff26382a;
+}
+
+.requirement p {
+  font-size: 11px;
+  color: #999;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.bonus {
+  margin-top: 15px;
+  padding: 18px;
+  text-align: center;
+  background: #ff26380c;
+  border: 1px solid #ff26382b;
+  border-radius: 13px;
+  color: #ddd;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.bonus strong { color: #ff4656; }
+
+.bottom {
+  text-align: center;
+  padding: 20px 20px 45px;
+}
+
+.bottom h2 { font-size: 25px; }
+
+footer {
+  border-top: 1px solid #ffffff10;
+  padding: 25px 20px;
+  color: #777;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.9;
+}
+
+@media(max-width:360px) {
+  header { padding: 15px 12px; }
+  .logo { font-size: 20px; }
+  .login { padding: 8px 4px; }
+  .join { padding: 11px 10px; }
+  .requirement { padding: 15px 11px; }
+}
+
+/* Neon red glow for the statistics cards */
+.stats .stat {
+  position: relative;
+  border: 1px solid #ff263855;
+  background: linear-gradient(145deg, #1b0a0d, #0c090a);
+  box-shadow:
+    0 0 12px #ff102522,
+    inset 0 0 18px #ff10250c;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.stats .stat:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 15px #ff263855,
+    0 0 32px #ff102522,
+    inset 0 0 20px #ff102515;
+}
+
+.stat-icon {
+  font-size: 30px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 8px #ff2638);
+}
+
+.stats .stat strong {
+  color: #ff3448;
+  text-shadow:
+    0 0 7px #ff2638,
+    0 0 18px #ff102577,
+    0 0 30px #ff102533;
+}
+
+.stats .stat small {
+  display: block;
+  margin-top: 8px;
+}
+
+@keyframes redPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px #ff263822;
+  }
+  50% {
+    box-shadow: 0 0 22px #ff263844, inset 0 0 18px #ff263811;
+  }
+}
+
+.stats .stat {
+  animation: redPulse 2.5s infinite ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats .stat {
+    animation: none;
+    transition: none;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">WHOT<span> PAY</span></div>
+  <nav class="nav">
+    <a class="login" href="/login">Login</a>
+    <a class="join" href="/register">Join Now ↗</a>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="badge">🔥 NIGERIAN WHOT GAMING</div>
+
+    <h1>YOUR SKILL.<span>YOUR GAME.</span></h1>
+
+    <p>
+      Step into the world of Nigerian Whot.
+      Challenge opponents, sharpen your strategy
+      and experience the excitement of every match.
+    </p>
+
+    <div class="ctas">
+      <a class="primary" href="/register">Get Started →</a>
+      <a class="secondary" href="/login">I Have an Account</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-icon">🏦</div>
+        <strong>₦200,000</strong>
+        <small>Advertised Payout Target</small>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">👥</div>
+        <strong>3,700</strong>
+        <small>Target Active Players</small>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-label">SIMPLE & STRAIGHTFORWARD</div>
+    <h2>Manage Your Money</h2>
+    <p class="sub">
+      Check the minimum account requirements before getting started.
+    </p>
+
+    <div class="requirements">
+      <div class="requirement">
+        <div class="icon">💰</div>
+        <h3>Minimum Deposit</h3>
+        <div class="amount">₦100</div>
+        <p>Minimum amount required for a deposit.</p>
+      </div>
+
+      <div class="requirement">
+        <div class="icon">💸</div>
+        <h3>Minimum Withdrawal</h3>
+        <div class="amount">₦300</div>
+        <p>Minimum withdrawal request amount.</p>
+      </div>
+    </div>
+
+    <div class="bonus">
+      🎁 <strong>Welcome Bonus: ₦80</strong><br>
+      The welcome bonus is planned and is not yet credited to accounts.
+    </div>
+  </section>
+
+  <div class="bottom">
+    <h2>Ready to Join the Game?</h2>
+    <p class="sub">Create your account and get started.</p>
+    <div class="ctas">
+      <a class="primary" href="/register">Create My Account ↗</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div>WHOT PAY · Nigerian Whot Gaming</div>
+  <div>Promotional figures are targets, not verified live statistics.</div>
+  <div>Real-money games and payouts are not yet enabled.</div>
+  <div>Play responsibly. 18+ where legally permitted.</div>
+</footer>
+
+</body>
+</html>

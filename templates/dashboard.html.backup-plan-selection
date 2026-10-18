@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WHOT PAY Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial,sans-serif}
+header{padding:20px;border-bottom:1px solid #292020;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:23px;font-weight:900;text-shadow:0 0 14px #ff263855}
+.logo span{color:#ff3045}
+header a{color:#ff6876;text-decoration:none;font-size:13px}
+main{max-width:750px;margin:auto;padding:20px}
+.muted{color:#aaa;font-size:13px}
+.balance{margin-top:22px;padding:25px 22px;border:1px solid #ff263855;border-radius:18px;background:radial-gradient(ellipse at top right,#50101b,#180c0f 50%,#101010);box-shadow:0 0 25px #ff263817}
+.balance small{color:#ddd}
+.amount{font-size:36px;font-weight:900;margin:12px 0;text-shadow:0 0 16px #ff26383b}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
+.action{padding:17px 10px;text-align:center;border:1px solid #432027;border-radius:13px;background:#141012;color:white;text-decoration:none;font-size:14px;font-weight:bold}
+.action span{display:block;font-size:25px;margin-bottom:9px}
+.action:hover{border-color:#ff3448;box-shadow:0 0 15px #ff263822}
+.section-title{margin:30px 0 14px;font-size:19px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.stat{padding:16px;border-radius:12px;background:#131112;border:1px solid #ffffff12}
+.stat b{display:block;color:#ff4658;font-size:21px;margin-top:8px}
+.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.plan{background:#141012;border:1px solid #492029;padding:16px;border-radius:13px}
+.plan b{display:block;color:#ff4054;font-size:23px;margin:8px 0}
+.plan small{color:#aaa}
+footer{padding:30px;text-align:center}
+.btn{display:inline-block;background:#d91028;color:white;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:bold}
+@media(min-width:600px){.plans{grid-template-columns:repeat(3,1fr)}}
+
+.actions .money-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 68px;
+  padding: 14px 8px;
+  background: linear-gradient(135deg, #ff3048, #d90020);
+  border: 1px solid #ff5265;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 0 18px #ff203333;
+  font-size: 14px;
+  font-weight: 800;
+  text-shadow: 0 0 8px #ffffff25;
+}
+
+.actions .money-action:hover {
+  background: linear-gradient(135deg, #ff5265, #f00028);
+  box-shadow: 0 0 25px #ff203366;
+  transform: translateY(-2px);
+}
+
+.actions .money-action span {
+  display: none;
+}
+\n
+
+
+
+@media (max-width: 360px) {
+  
+  
+}
+\n
+
+
+
+.balance .balance-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: auto !important;
+    grid-auto-flow: row !important;
+    gap: 12px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+}
+
+.balance .balance-actions > a.balance-btn {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 58px !important;
+    margin: 0 !important;
+    padding: 10px 5px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    border: 1px solid #ff5265 !important;
+    border-radius: 11px !important;
+    background: linear-gradient(135deg,#ff3048,#df0024) !important;
+    box-shadow: 0 0 16px #ff203355 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    line-height: 1.4 !important;
+    -webkit-text-decoration: none !important;
+    text-decoration-line: none !important;
+}
+
+.balance .balance-actions > a.balance-btn:link,
+.balance .balance-actions > a.balance-btn:visited,
+.balance .balance-actions > a.balance-btn:hover,
+.balance .balance-actions > a.balance-btn:active {
+    color: #fff !important;
+    text-decoration: none !important;
+    -webkit-text-decoration: none !important;
+}
+
+
+/* WHOT PAY - FIX DEPOSIT AND WITHDRAW POSITION */
+.balance-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: auto !important;
+    grid-auto-flow: row !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+}
+.balance-actions > a,
+.balance-actions > a.balance-btn {
+    grid-row: 1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px 4px !important;
+    min-height: 60px !important;
+    background: linear-gradient(135deg,#ff3048,#df0024) !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    -webkit-text-decoration: none !important;
+    border: 1px solid #ff5265 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 18px #ff203355 !important;
+    text-align: center !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+.balance-actions > a:first-child {
+    grid-column: 1 !important;
+}
+.balance-actions > a:last-child {
+    grid-column: 2 !important;
+}
+.balance-actions a:link,
+.balance-actions a:visited,
+.balance-actions a:hover,
+.balance-actions a:active {
+    text-decoration: none !important;
+    color: #fff !important;
+}
+
+
+/* Glowing WHOT entry plan cards */
+.plan-card,.plan,.entry-plan,.plans-grid>div {
+ border:1px solid #6b202d !important;
+ border-radius:17px !important;
+ background:linear-gradient(145deg,#1b0d11,#100d0e) !important;
+ box-shadow:0 0 14px #ff16301c,inset 0 0 15px #ff16300a !important;
+ transition:transform .2s,box-shadow .2s;
+}
+.plan-card:hover,.plan:hover,.entry-plan:hover,.plans-grid>div:hover {
+ box-shadow:0 0 24px #ff203055 !important;transform:translateY(-3px);
+}
+.play-ai-btn {
+ display:block;text-align:center;margin-top:14px;padding:12px 8px;
+ border-radius:10px;background:linear-gradient(120deg,#ff3048,#d90024);
+ color:#fff !important;text-decoration:none !important;font-weight:800;
+ box-shadow:0 0 15px #ff203044;border:1px solid #ff6878;
+}
+
+</style>
+</head>
+<body>
+<header>
+<div class="logo">WHOT <span>PAY</span></div>
+<a href="/logout">LOG OUT ↗</a>
+</header>
+<main>
+<h2>Hello, {{ user.fullname or user.username }} 👋</h2>
+<p class="muted">Welcome to your personal gaming dashboard.</p>
+
+<div class="balance">
+<small>💰 AVAILABLE BALANCE</small>
+<div class="amount">₦{{ "{:,}".format(user.balance) }}</div>
+<p class="muted">Your current account balance</p>
+<div class="balance-actions">
+<a class="balance-btn" href="/deposit">💰 Deposit Funds</a>
+<a class="balance-btn" href="/withdraw">💸 Withdraw</a>
+</div>
+</div>
+
+<div class="actions">
+<a class="action" href="/history"><span>📜</span>Transaction History</a>
+<a class="action" href="/referrals"><span>👥</span>Refer &amp; Earn</a>
+</div>
+
+<h3 class="section-title">🎮 Whot Entry Plans</h3>
+<a class="play-ai-btn" href="/play">🎮 Play Nigerian Whot vs AI</a>
+
+<div class="plans">
+{% for plan in plans %}
+<div class="plan">
+<small>ENTRY AMOUNT</small>
+<b>₦{{ "{:,}".format(plan.entry) }}</b>
+<small>Advertised prize: ₦{{ "{:,}".format(plan.prize) }}</small>
+</div>
+{% endfor %}
+</div>
+<p class="muted">Entry plans are displayed for information. Real-money gameplay and prize payments are not yet enabled.</p>
+</main>
+<footer><a class="btn" href="/">Visit Welcome Page</a></footer>
+</body>
+</html>

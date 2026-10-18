@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Withdraw | WHOT PAY</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#080808;color:white;font-family:Arial}
+.box{max-width:450px;margin:20px auto;background:#151012;border:1px solid #492029;border-radius:17px;padding:24px}
+p{color:#aaa;font-size:13px;line-height:1.7}
+label{display:block;margin:17px 0 8px;font-size:13px}
+input{width:100%;padding:14px;background:#090909;color:white;border:1px solid #403035;border-radius:8px}
+button{width:100%;padding:14px;border:0;border-radius:9px;background:#e51a32;color:white;font-weight:bold;margin-top:23px}
+a{display:block;text-align:center;color:#ff6574;margin-top:20px;text-decoration:none}
+.error{color:#ff7c89}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>💸 Withdraw Funds</h2>
+<p>Minimum withdrawal: ₦300. Enter your bank details carefully.</p>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="post">
+<label for="bank">Bank Name</label>
+<input id="bank" name="bank" maxlength="80" required>
+
+<label for="account_name">Account Name</label>
+<input id="account_name" name="account_name" maxlength="100" required>
+
+<label for="account_number">Account Number</label>
+<input id="account_number" name="account_number" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required>
+
+<label for="amount">Amount (₦)</label>
+<input id="amount" name="amount" type="number" min="300" required>
+
+<button type="submit">Submit Withdrawal Request</button>
+</form>
+<p>Requests are subject to balance checks and administrator review. This form does not send a bank transfer.</p>
+<a href="/dashboard">← Back to Dashboard</a>
+</div>
+</body>
+</html>

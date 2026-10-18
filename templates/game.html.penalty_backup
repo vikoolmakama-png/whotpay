@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WHOT PAY — Nigerian Whot</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#07130d;color:white;font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px;background:#090909;border-bottom:2px solid #a81b36}
+.logo{font-size:23px;font-weight:900}.logo span{color:#ff3048}
+a{color:#ff7285;text-decoration:none}
+main{max-width:900px;margin:auto;padding:12px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0}
+.pill{background:#271017;border:1px solid #9e263e;border-radius:20px;padding:8px 12px;font-size:12px}
+.board{background:radial-gradient(ellipse at center,#237647,#10502f 60%,#07321e);border:3px solid #a72942;border-radius:15px;overflow:hidden;box-shadow:0 0 20px #ff173025}
+.ai-area,.player-area{padding:12px 8px;text-align:center}
+.ai-area{border-bottom:2px solid #ad263e}
+.player-area{border-top:2px solid #ad263e}
+.namebar{display:flex;justify-content:space-between;align-items:center;margin:0 3px 10px}
+.hand{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap}
+.card{position:relative;flex:0 1 62px;width:62px;height:91px;min-width:0;border:2px solid #eee0c8;border-radius:7px;background:#fff9ed;color:#8b1018;display:flex;flex-direction:column;justify-content:space-between;padding:4px;font-family:Georgia,serif;box-shadow:0 2px 5px #001b0d;font-weight:bold;overflow:hidden}
+.card .number{font-size:20px;line-height:1}
+.card .symbol{font-size:39px;text-align:center;line-height:1}
+.card .bottom{font-size:10px;text-align:right;transform:rotate(180deg)}
+.card.triangle{color:#97101a}
+.card.cross{color:#8c1019}
+.card.square{color:#92121c}
+.card.star{color:#97101a}
+.card.back{background:repeating-linear-gradient(45deg,#5b0d20,#5b0d20 5px,#9e1730 5px,#9e1730 9px);color:#fff;border:2px solid #f0d9d9;justify-content:center;text-align:center;font-size:12px}
+button{font:inherit;cursor:pointer}
+.hand button{padding:0;background:none;border:0;border-radius:8px}
+.hand button:disabled{cursor:default}
+.hand button.playable .card{transform:translateY(-5px);border-color:#ffe16c;box-shadow:0 0 0 2px #ffdf58,0 0 14px #ffe16c}
+.hand button.playable:active .card{transform:translateY(-9px)}
+.middle{min-height:245px;padding:13px 9px;display:grid;grid-template-columns:75px minmax(0,1fr) 75px;align-items:center;gap:8px}
+.pile{display:flex;flex-direction:column;align-items:center;gap:8px}
+.pile .card{flex:none;width:54px;height:78px}
+.count{background:#202020;border:2px solid #777;border-radius:8px;padding:6px 9px;font-size:14px}
+.center{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;min-width:0}
+.center .card{width:88px;height:128px;flex:none;border:3px solid #fff}
+.center .card .number{font-size:26px}
+.center .card .symbol{font-size:59px}
+#status{font-weight:bold;font-size:14px;line-height:1.4;min-height:36px}
+.actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.action{border:1px solid #ff6479;border-radius:9px;background:linear-gradient(120deg,#ff3048,#d90024);color:white;padding:11px 12px;font-size:13px;font-weight:bold}
+.action.secondary{background:#201015;border-color:#8c3040}
+.action:disabled{opacity:.45}
+.info{font-size:12px;color:#d7e5db;line-height:1.5;margin-top:8px}
+.rules{margin-top:12px;background:#100d0e;border:1px solid #48202a;border-radius:13px;padding:13px;font-size:12px;line-height:1.7;color:#e3d9dc}
+.rules summary{cursor:pointer;font-size:14px;font-weight:bold}
+#notice{color:#ffe28a;min-height:18px;font-size:12px;margin-top:5px}
+@media(max-width:390px){
+ main{padding:7px}.middle{grid-template-columns:57px minmax(0,1fr) 57px;gap:4px;padding:10px 4px}
+ .card{flex-basis:49px;width:49px;height:75px;padding:3px}
+ .card .number{font-size:17px}.card .symbol{font-size:30px}
+ .card .bottom{font-size:8px}
+ .middle .pile .card{width:47px;height:69px}
+ .center .card{width:76px;height:112px}.center .card .symbol{font-size:49px}
+ .center .card .number{font-size:23px}
+ .action{padding:10px 8px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<header><div class="logo">WHOT <span>PAY</span></div><a href="/dashboard">← Dashboard</a></header>
+<main>
+<div class="topline"><strong>🎮 NIGERIAN WHOT</strong><span class="pill">YOU vs AI</span></div>
+<div class="board">
+<section class="ai-area">
+ <div class="namebar"><strong id="aiName">🤖 Ade Kombucha Tea</strong><span id="aiCount" class="pill">6 cards</span></div>
+ <div id="aiHand" class="hand" aria-label="AI cards"></div>
+</section>
+<section class="middle">
+ <div class="pile"><button id="drawPile" aria-label="Draw a card" style="padding:0;border:0;background:none"><div class="card back"><span>WHOT</span><span style="font-size:27px">★</span><span>WHOT</span></div></button><span id="deckCount" class="count">0</span><small>MARKET</small></div>
+ <div class="center"><div class="info">CURRENT CARD</div><div id="topCard"></div><div id="status" aria-live="polite">Your turn</div><div class="actions"><button id="drawBtn" class="action">🂠 Draw card</button><button id="newBtn" class="action secondary">↻ New game</button></div><div id="notice" aria-live="polite"></div></div>
+ <div class="pile"><div id="discardMini"></div><span id="discardCount" class="count">TOP</span><small>PLAYED</small></div>
+</section>
+<section class="player-area">
+ <div class="namebar"><strong>🧑 You</strong><span id="youCount" class="pill">6 cards</span></div>
+ <div id="hand" class="hand" aria-label="Your cards"></div>
+ <div class="info">Tap a highlighted card to play it. If you have no playable card, draw from the market.</div>
+</section>
+</div>
+<details class="rules"><summary>📖 Nigerian Whot rules</summary>
+1 — Hold On: play another card immediately.<br>
+2 — Pick Two: the next player draws two and loses their turn; a 2 can pass the penalty onward.<br>
+8 — Suspension: skip the next player. A Star 8 skips two turns; in this two-player game, your turn continues.<br>
+14 — General Market: the opponent draws one card.<br>
+Match the current card by shape or number. The Star suit has fewer cards and counts double in final scoring.
+</details>
+</main>
+<script>
+(function(){
+const suits=[
+{name:"Circle",icon:"●",cls:"circle",nums:[1,2,3,4,5,7,8,10,11,12,13,14]},
+{name:"Triangle",icon:"▲",cls:"triangle",nums:[1,2,3,4,5,7,8,10,11,12,13,14]},
+{name:"Cross",icon:"✚",cls:"cross",nums:[1,2,3,5,7,10,11,13,14]},
+{name:"Square",icon:"■",cls:"square",nums:[1,2,3,5,7,10,11,13,14]},
+{name:"Star",icon:"★",cls:"star",nums:[1,2,3,4,5,7,8]}
+];
+const names=["Ade Kombucha Tea","Chinedu Blaze","Aisha Spark","Tunde Legend","Zara Quickplay","Emeka Champion","Bola Star","Ifeoma Ace"];
+let deck=[],hand=[],ai=[],top=null,discard=[],turn="you",penalty=0,extra=false,ended=false,busy=false;
+const $=id=>document.getElementById(id);
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function makeDeck(){return shuffle(suits.flatMap(s=>s.nums.map(n=>({shape:s.name,icon:s.icon,cls:s.cls,n}))))}
+function draw(){if(!deck.length){if(discard.length>1){let last=discard.pop();deck=shuffle(discard);discard=[];top=last}else return null}return deck.pop()}
+function match(c){return c.shape===top.shape||c.n===top.n}
+function card(c,back=false){if(back)return '<div class="card back"><span>WHOT</span><span style="font-size:26px">★</span><span>WHOT</span></div>';return '<div class="card '+c.cls+'"><span class="number">'+c.n+'</span><span class="symbol">'+c.icon+'</span><span class="bottom">'+c.n+' · '+c.icon+'</span></div>'}
+function say(s){$("notice").textContent=s}
+function render(){
+ $("aiCount").textContent=ai.length+" cards";$("youCount").textContent=hand.length+" cards";$("deckCount").textContent=deck.length;
+ $("aiHand").innerHTML=ai.map(()=>card(null,true)).join("");
+ $("topCard").innerHTML=top?card(top):"";
+ $("discardMini").innerHTML=discard.length?card(discard[discard.length-1]):"";
+ $("discardCount").textContent="TOP";
+ $("status").textContent=ended?"Game finished":busy?"AI is thinking…":turn==="you"?"Your turn — tap a highlighted card":names[currentName]+"’s turn";
+ $("drawBtn").disabled=ended||busy||turn!=="you";
+ $("drawPile").disabled=ended||busy||turn!=="you";
+ $("hand").innerHTML="";
+ hand.forEach((c,i)=>{
+  const b=document.createElement("button");b.type="button";b.innerHTML=card(c);
+  const playable=!ended&&!busy&&turn==="you"&&(!penalty?match(c):c.n===2);
+  b.disabled=!playable;if(playable)b.classList.add("playable");
+  b.setAttribute("aria-label","Play "+c.n+" of "+c.shape);
+  b.addEventListener("click",()=>play("you",i));$("hand").appendChild(b)
+ });
+}
+let currentName=0;
+function start(){
+ deck=makeDeck();hand=[];ai=[];discard=[];penalty=0;extra=false;ended=false;busy=false;turn="you";
+ currentName=Math.floor(Math.random()*names.length);$("aiName").textContent="🤖 "+names[currentName];
+ for(let i=0;i<6;i++){hand.push(draw());ai.push(draw())}
+ top=draw();say("Match the number or shape to play.");render()
+}
+async function finish(who){
+ ended=true;busy=false;
+ say(who==="you"?"🏆 You finished first!":"🤖 "+names[currentName]+" finished first.");
+ $("status").textContent="Saving game result…";
+ render();
+
+ const gameId = {{ game_id|default(none)|tojson }};
+ if(!gameId){
+  $("status").textContent="Practice game — no entry fee or prize.";
+  return;
+ }
+
+ try {
+  const response = await fetch("/api/game/settle", {
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({game_id:gameId,winner:who})
+  });
+  const result = await response.json();
+  $("status").textContent=result.message||result.error||"Game result saved.";
+  say(result.message||result.error||"Game result saved.");
+ } catch(error) {
+  $("status").textContent="Could not save result. Contact the administrator.";
+ }
+ render();
+}
+function play(who,index){
+ if(ended||busy||turn!==who)return;
+ const h=who==="you"?hand:ai;
+ const c=h[index];
+ if(!c)return;
+ if(penalty){
+  if(c.n!==2){
+   if(who==="you")say("Pick Two penalty: play a 2 to defend, or draw the penalty cards.");
+   render();
+   return;
+  }
+ }else if(!match(c)){
+  return;
+ }
+
+ h.splice(index,1);
+ discard.push(top);
+ top=c;
+ say((who==="you"?"You":names[currentName])+" played "+c.n+" "+c.shape+".");
+
+ if(!h.length){finish(who);return}
+
+ if(c.n===2){
+  penalty+=2;
+  turn=who==="you"?"ai":"you";
+  render();
+  if(turn==="ai")scheduleAI();
+  return;
+ }
+
+ if(penalty)return;
+
+ if(c.n===1||c.n===8){
+  turn=who;
+ }else if(c.n===14){
+  if(who==="you"){
+   const x=draw();
+   if(x)ai.push(x);
+   say(names[currentName]+" draws one card from General Market.");
+  }else{
+   const x=draw();
+   if(x)hand.push(x);
+   say("General Market! You draw one card.");
+  }
+  turn=who;
+ }else{
+  turn=who==="you"?"ai":"you";
+ }
+
+ render();
+ if(turn==="ai")scheduleAI();
+}
+
+function drawForPlayer(who){
+ if(ended||busy||turn!==who)return;
+ const h=who==="you"?hand:ai;
+
+ if(penalty){
+  if(h.some(c=>c.n===2)){
+   say("Play a 2 to defend, or draw the penalty.");
+   return;
+  }
+  const amount=penalty;
+  for(let i=0;i<amount;i++){
+   const c=draw();
+   if(c)h.push(c);
+  }
+  penalty=0;
+  turn=who==="you"?"ai":"you";
+  say((who==="you"?"You":names[currentName])+" picked "+amount+" penalty cards. Turn passed.");
+  render();
+  if(turn==="ai")scheduleAI();
+  return;
+ }
+
+ const c=draw();
+ if(c)h.push(c);
+ turn=who==="you"?"ai":"you";
+ say((who==="you"?"You":names[currentName])+" drew a card. Turn passed.");
+ render();
+ if(turn==="ai")scheduleAI();
+}
+
+function scheduleAI(){busy=true;render();setTimeout(aiMove,420)}
+function aiMove(){
+ if(ended)return;
+ busy=false;
+
+ // Defend against Pick Two and pass the penalty onward when possible.
+ if(penalty){
+  const i=ai.findIndex(c=>c.n===2);
+  if(i>=0){
+   play("ai",i);
+   return;
+  }
+  const amount=penalty;
+  for(let j=0;j<amount;j++){
+   const c=draw();
+   if(c)ai.push(c);
+  }
+  penalty=0;
+  turn="you";
+  say(names[currentName]+" picked "+amount+" penalty cards. Your turn.");
+  render();
+  return;
+ }
+
+ const candidates=ai.map((c,i)=>({c,i})).filter(x=>match(x.c));
+
+ if(candidates.length){
+  function scoreMove(x){
+   const c=x.c;
+   const remaining=ai.filter((card,i)=>i!==x.i);
+   let score=0;
+
+   // Prefer playing a card that reduces the hand.
+   score+=10;
+
+   // Special cards are valuable, but use them strategically.
+   if(c.n===2) score+=9;
+   if(c.n===14) score+=8;
+   if(c.n===8) score+=5;
+   if(c.n===1) score+=4;
+
+   // Prefer a shape the AI can continue playing.
+   const sameShape=remaining.filter(card=>card.shape===c.shape).length;
+   score+=sameShape*3;
+
+   // Prefer numbers that appear more often in the remaining hand.
+   const sameNumber=remaining.filter(card=>card.n===c.n).length;
+   score+=sameNumber*2;
+
+   // Avoid wasting a special card when an ordinary move is available.
+   if([2,14,8,1].includes(c.n) && candidates.some(x=>![2,14,8,1].includes(x.c.n))){
+    score-=2;
+   }
+
+   // Finish promptly when this card empties the hand.
+   if(remaining.length===0)score+=1000;
+
+   return score;
+  }
+
+  candidates.sort((a,b)=>scoreMove(b)-scoreMove(a));
+  play("ai",candidates[0].i);
+  return;
+ }
+
+ // No playable card: draw and pass the turn.
+ const c=draw();
+ if(c)ai.push(c);
+ turn="you";
+ say(names[currentName]+" drew a card. Your turn.");
+ render();
+}
+$("drawBtn").addEventListener("click",()=>drawForPlayer("you"));
+$("drawPile").addEventListener("click",()=>drawForPlayer("you"));
+$("newBtn").addEventListener("click",start);
+start();
+})();
+</script>
+</body>
+</html>
