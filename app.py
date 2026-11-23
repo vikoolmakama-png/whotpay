@@ -210,6 +210,7 @@ def initialize():
             "email": "TEXT NOT NULL DEFAULT ''",
             "referral_code": "TEXT",
             "referred_by": "TEXT",
+            "whotpay_visible": "INTEGER NOT NULL DEFAULT 0",
         }
         for name, definition in additions.items():
             if name not in columns:
@@ -276,8 +277,9 @@ def register():
                         cursor = db.execute("""
                             INSERT INTO users
                             (name, fullname, full_name, email, username,
-                             password, balance, referral_code, referred_by)
-                            VALUES (?, ?, ?, ?, ?, ?, 80, ?, ?)
+                             password, balance, referral_code, referred_by,
+                             whotpay_visible)
+                            VALUES (?, ?, ?, ?, ?, ?, 80, ?, ?, 1)
                         """, (
                             fullname, fullname, fullname, email, username,
                             password_hash, code, referrer_id
@@ -726,18 +728,18 @@ def admin_login():
 def admin_dashboard():
     with connect() as db:
         total_users = db.execute(
-            "SELECT COUNT(*) FROM users WHERE id > 32"
+            "SELECT COUNT(*) FROM users WHERE whotpay_visible = 1"
         ).fetchone()[0]
 
         users = db.execute("""
             SELECT id, username, fullname, email, balance
             FROM users
-            WHERE id > 32
+            WHERE whotpay_visible = 1
             ORDER BY id DESC
         """).fetchall()
 
         total_balance = db.execute(
-            "SELECT COALESCE(SUM(balance), 0) FROM users WHERE id > 32"
+            "SELECT COALESCE(SUM(balance), 0) FROM users WHERE whotpay_visible = 1"
         ).fetchone()[0]
 
         transactions = db.execute("""
@@ -746,7 +748,7 @@ def admin_dashboard():
                    u.fullname, u.balance
             FROM transactions AS t
             JOIN users AS u ON u.id = t.user_id
-            WHERE u.id > 32
+            WHERE u.whotpay_visible = 1
             ORDER BY t.id DESC
         """).fetchall()
 
