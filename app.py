@@ -348,7 +348,8 @@ def dashboard():
         """, (user["id"],)).fetchone()["total"]
 
         referral_count = db.execute("""
-            SELECT COUNT(*) AS total FROM users WHERE referred_by = ?
+            SELECT COUNT(*) AS total FROM users
+            WHERE CAST(referred_by AS TEXT) = CAST(? AS TEXT)
         """, (user["id"],)).fetchone()["total"]
 
     return render_template(
