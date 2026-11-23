@@ -206,10 +206,12 @@ def initialize():
         columns = {row["name"] for row in db.execute(
             "PRAGMA table_info(users)").fetchall()}
         additions = {
+            "name": "TEXT NOT NULL DEFAULT ''",
             "fullname": "TEXT NOT NULL DEFAULT ''",
+            "full_name": "TEXT NOT NULL DEFAULT ''",
             "email": "TEXT NOT NULL DEFAULT ''",
             "referral_code": "TEXT",
-            "referred_by": "TEXT",
+            "referred_by": "INTEGER",
             "whotpay_visible": "INTEGER NOT NULL DEFAULT 0",
         }
         for name, definition in additions.items():
