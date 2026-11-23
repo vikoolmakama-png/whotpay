@@ -256,25 +256,31 @@ def register():
         else:
             try:
                 with connect() as db:
+                    referrer_id = None
+
                     if referral:
                         referrer = db.execute(
                             "SELECT id FROM users WHERE referral_code = ?",
                             (referral,)
                         ).fetchone()
+
                         if not referrer:
                             error = "That referral code does not exist."
+                        else:
+                            referrer_id = referrer["id"]
 
                     if not error:
                         code = secrets.token_hex(4).upper()
+                        password_hash = generate_password_hash(password)
+
                         cursor = db.execute("""
                             INSERT INTO users
-                            (fullname, email, username, password,
-                             balance, referral_code, referred_by)
-                            VALUES (?, ?, ?, ?, 80, ?, ?)
+                            (name, fullname, full_name, email, username,
+                             password, balance, referral_code, referred_by)
+                            VALUES (?, ?, ?, ?, ?, ?, 80, ?, ?)
                         """, (
-                            fullname, email, username,
-                            generate_password_hash(password),
-                            code, referral if referral else None
+                            fullname, fullname, fullname, email, username,
+                            password_hash, code, referrer_id
                         ))
 
                         new_user_id = cursor.lastrowid
@@ -339,7 +345,7 @@ def dashboard():
 
         referral_count = db.execute("""
             SELECT COUNT(*) AS total FROM users WHERE referred_by = ?
-        """, (user["referral_code"],)).fetchone()["total"]
+        """, (user["id"],)).fetchone()["total"]
 
     return render_template(
         "dashboard.html",
@@ -720,17 +726,18 @@ def admin_login():
 def admin_dashboard():
     with connect() as db:
         total_users = db.execute(
-            "SELECT COUNT(*) FROM users"
+            "SELECT COUNT(*) FROM users WHERE id > 32"
         ).fetchone()[0]
 
         users = db.execute("""
             SELECT id, username, fullname, email, balance
             FROM users
+            WHERE id > 32
             ORDER BY id DESC
         """).fetchall()
 
         total_balance = db.execute(
-            "SELECT COALESCE(SUM(balance), 0) FROM users"
+            "SELECT COALESCE(SUM(balance), 0) FROM users WHERE id > 32"
         ).fetchone()[0]
 
         transactions = db.execute("""
@@ -738,7 +745,8 @@ def admin_dashboard():
                    t.details, t.created_at, u.username,
                    u.fullname, u.balance
             FROM transactions AS t
-            LEFT JOIN users AS u ON u.id = t.user_id
+            JOIN users AS u ON u.id = t.user_id
+            WHERE u.id > 32
             ORDER BY t.id DESC
         """).fetchall()
 
